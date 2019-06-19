@@ -12,7 +12,7 @@ public class TouristDto {
     private Gender gender;
     private String country;
     private String remarks;
-    private LocalDate birthDate;
+    private String birthDate;
 
     public Long getId() {
         return id;
@@ -62,12 +62,11 @@ public class TouristDto {
         this.remarks = remarks;
     }
 
-    public LocalDate getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
-
 }

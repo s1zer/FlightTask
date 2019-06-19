@@ -1,7 +1,6 @@
 package com.treative.flight.components.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +13,12 @@ public class Tourist {
     private Long id;
     private String firstName;
     private String lastName;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private String country;
     private String remarks;
     @Column(name = "birth_date")
-    private LocalDate birthDate;
+    private String birthDate;
     @ManyToMany(mappedBy = "tourists")
     private List<Flight> flights = new ArrayList<>();
 
@@ -70,11 +70,11 @@ public class Tourist {
         this.remarks = remarks;
     }
 
-    public LocalDate getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
