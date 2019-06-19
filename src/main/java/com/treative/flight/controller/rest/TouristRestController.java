@@ -33,5 +33,14 @@ public class TouristRestController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    ResponseEntity<Long> deleteTourist(@PathVariable Long id) {
+        if (touristService.findTouristById(id).isPresent()) {
+            touristService.deleteTouristById(id);
+            return ResponseEntity.ok(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tourist has not been found");
+        }
+    }
 
 }

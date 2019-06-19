@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -45,6 +46,20 @@ public class TouristServiceUnitTest {
     }
 
     @Test
+    void shouldGetTouristById() {
+        //given
+        Tourist tourist = getTourist();
+        given(touristMockRepository.findById(anyLong())).willReturn(Optional.of(tourist));
+
+        //when
+        Optional<TouristDto> foundTourist = touristService.findTouristById(anyLong());
+
+        //then
+        verify(touristMockRepository, times(1)).findById(anyLong());
+        assertThat(foundTourist.get().getId(), equalTo(tourist.getId()));
+    }
+
+    @Test
     void shouldSaveNewTourist() {
         //given
         TouristDto touristToSave = getTouristDto();
@@ -59,6 +74,31 @@ public class TouristServiceUnitTest {
         assertThat(savedTourist.getFirstName(), equalTo(touristToSave.getFirstName()));
 
     }
+
+    @Test
+    void touristShouldBeRemoved() {
+        //given
+        given(touristMockRepository.findById(anyLong())).willReturn(Optional.of(getTourist()));
+
+        //when
+        touristService.deleteTouristById(anyLong());
+
+        //then
+        verify(touristMockRepository, times(1)).delete(any(Tourist.class));
+    }
+
+    @Test
+    void touristShouldNotBeRemoved() {
+        //given
+        given(touristMockRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        //when
+        touristService.deleteTouristById(anyLong());
+
+        //then
+        verify(touristMockRepository, times(0)).delete(any(Tourist.class));
+    }
+
 
     private List<Tourist> getAllTourists() {
         Tourist tourist1 = new Tourist();

@@ -2,6 +2,7 @@ package com.treative.flight.controller.rest;
 
 import com.treative.flight.components.dto.TouristDto;
 import com.treative.flight.components.model.Gender;
+import com.treative.flight.components.model.Tourist;
 import com.treative.flight.service.TouristService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +15,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,6 +79,31 @@ public class TouristRestControllerUnitTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void touristShouldNotBeRemoved() {
+        //given
+        TouristDto touristToRemove = getTouristDto();
+        given(touristService.findTouristById(anyLong())).willReturn(Optional.empty());
+
+        //when
+        //then
+        assertThrows(ResponseStatusException.class, () -> touristRestController.deleteTourist(touristToRemove.getId()));
+    }
+
+    @Test
+    void touristShouldBeRemoved() throws Exception {
+        //given
+        TouristDto touristToRemove = getTouristDto();
+        given(touristService.findTouristById(anyLong())).willReturn(Optional.of(getTouristDto()));
+
+        //when
+        touristRestController.deleteTourist(touristToRemove.getId());
+
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/tourist"))
+                .andExpect(status().isOk());
+    }
+
     private TouristDto getTouristDto() {
         TouristDto touristDto = new TouristDto();
         touristDto.setId(1L);
@@ -87,6 +115,19 @@ public class TouristRestControllerUnitTest {
         touristDto.setRemarks("No remarks");
 
         return touristDto;
+    }
+
+    private Tourist getTourist() {
+        Tourist tourist = new Tourist();
+        tourist.setId(1L);
+        tourist.setFirstName("Joseph");
+        tourist.setLastName("Smart");
+        tourist.setCountry("Norway");
+        tourist.setBirthDate("1985-04-09");
+        tourist.setGender(Gender.MALE);
+        tourist.setRemarks("No remarks");
+
+        return tourist;
     }
 
     private List<TouristDto> getTouristsDto() {
