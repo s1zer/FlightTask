@@ -19,6 +19,10 @@
  - MySQL,
  - REST
  - jUnit5 and Mockito
+ 
+  **Test coverage: **
+  
+
 
       
 
