@@ -1,7 +1,8 @@
 # Task
 
 **Running an application requires entering database settings in "application.settings".** 
-**Enter: 'mvn test' - to run all unit tests in terminal.** 
+
+**Enter 'mvn test' in terminal to runn all unit tests** 
 
 **Features:**
  - REST API: 
