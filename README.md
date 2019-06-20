@@ -12,8 +12,8 @@
    - api/tourists/{id}
    - api/reservation
    - api/reservation/{id}
-   
-   **Technologies:**
+  
+ **Technologies:**
  - Spring Boot,
  - Hibernate,
  - MySQL,
