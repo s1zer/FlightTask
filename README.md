@@ -6,7 +6,7 @@
 
 **Features:**
  - REST API: 
-   - api/flights/
+   - api/flights
    - api/flights/{id}
    - api/tourists
    - api/tourists/{id}
