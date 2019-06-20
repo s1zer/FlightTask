@@ -4,10 +4,7 @@ import com.treative.flight.components.dto.ReservationDto;
 import com.treative.flight.service.ReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -26,6 +23,16 @@ public class ReservationRestController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reservation's id must be empty");
         } else {
             return ResponseEntity.ok(reservationService.createReservation(reservationDto));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Long> deleteReservation(@PathVariable Long id) {
+        if (reservationService.findTouristById(id).isPresent()) {
+            reservationService.removeTouristFormFlight(id);
+            return ResponseEntity.ok(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reservation has not been found");
         }
     }
 }

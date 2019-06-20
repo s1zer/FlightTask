@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
- class TouristRestControllerUnitTest {
+class TouristRestControllerUnitTest {
 
     private TouristRestController touristRestController;
     @Mock
@@ -75,8 +76,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         touristRestController.saveTourist(touristToSave);
 
         //then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/tourists"))
-                .andExpect(status().isOk());
+        verify(touristService, times(1)).save(any(TouristDto.class));
     }
 
     @Test
@@ -100,7 +100,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         touristRestController.deleteTourist(touristToRemove.getId());
 
         //then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/tourists"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/tourists/1"))
                 .andExpect(status().isOk());
     }
 
@@ -133,6 +133,5 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     private List<TouristDto> getTouristsDto() {
         return Arrays.asList(getTouristDto(), new TouristDto());
     }
-
 
 }

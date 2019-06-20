@@ -30,6 +30,10 @@ public class ReservationService {
         this.reservationMapper = reservationMapper;
     }
 
+    public Optional<ReservationDto> findTouristById(Long id) {
+        return reservationRepository.findById(id).map(reservationMapper::toDto);
+    }
+
     public ReservationDto createReservation(ReservationDto reservationDto) {
         Optional<Flight> flight = flightRepository.findById(reservationDto.getFlightId());
         Optional<Tourist> tourist = touristRepository.findById(reservationDto.getTouristId());
@@ -47,11 +51,20 @@ public class ReservationService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Flight has not been found");
         }
 
-        updateFlightSeats(flight.get());
+        decreaseFlightSeats(flight.get());
         return reservationMapper.toDto(reservationRepository.save(reservation));
     }
 
-    private boolean checkFreeSeats(int seats) {
+    public void removeTouristFormFlight(Long reservationId) {
+        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+        if (reservation.isPresent()) {
+            reservationRepository.delete(reservation.get());
+            Flight flight = reservation.get().getFlight();
+            increaseFlightSeats(flight);
+        }
+    }
+
+    public boolean checkFreeSeats(int seats) {
         if (seats >= 1) {
             return true;
         } else {
@@ -59,8 +72,13 @@ public class ReservationService {
         }
     }
 
-    private void updateFlightSeats(Flight flight) {
+    public void decreaseFlightSeats(Flight flight) {
         flight.setSeats(flight.getSeats() - 1);
+        flightRepository.save(flight);
+    }
+
+    public void increaseFlightSeats(Flight flight) {
+        flight.setSeats(flight.getSeats() + 1);
         flightRepository.save(flight);
     }
 

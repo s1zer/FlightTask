@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -76,8 +77,7 @@ class FlightRestControllerUnitTest {
         flightRestController.saveFlight(flightToSave);
 
         //then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/flights"))
-                .andExpect(status().isOk());
+        verify(flightService, times(1)).saveFlight(any(FlightDto.class));
     }
 
     @Test
@@ -99,7 +99,7 @@ class FlightRestControllerUnitTest {
 
         //when
         //then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/flights"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/flights/1"))
                 .andExpect(status().isOk());
     }
 
