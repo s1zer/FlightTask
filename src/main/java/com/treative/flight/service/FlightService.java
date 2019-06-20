@@ -4,11 +4,13 @@ import com.treative.flight.components.dto.FlightDto;
 import com.treative.flight.components.mapper.FlightMapper;
 import com.treative.flight.components.model.Flight;
 import com.treative.flight.repository.FlightRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 public class FlightService {
 
     private FlightRepository flightRepository;

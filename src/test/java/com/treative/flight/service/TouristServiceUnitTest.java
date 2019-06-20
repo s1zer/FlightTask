@@ -63,7 +63,6 @@ public class TouristServiceUnitTest {
     void shouldSaveNewTourist() {
         //given
         TouristDto touristToSave = getTouristDto();
-
         given(touristMockRepository.save(any(Tourist.class))).willReturn(getTourist());
 
         //when
@@ -72,7 +71,6 @@ public class TouristServiceUnitTest {
         //then
         verify(touristMockRepository, times(1)).save(any(Tourist.class));
         assertThat(savedTourist.getFirstName(), equalTo(touristToSave.getFirstName()));
-
     }
 
     @Test

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class TouristRestControllerUnitTest {
+ class TouristRestControllerUnitTest {
 
     private TouristRestController touristRestController;
     @Mock
@@ -50,7 +50,7 @@ public class TouristRestControllerUnitTest {
 
         //then
         verify(touristService, times(1)).findAllTourists();
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/tourist"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/tourists"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
@@ -75,7 +75,7 @@ public class TouristRestControllerUnitTest {
         touristRestController.saveTourist(touristToSave);
 
         //then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/tourist"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/tourists"))
                 .andExpect(status().isOk());
     }
 
@@ -100,7 +100,7 @@ public class TouristRestControllerUnitTest {
         touristRestController.deleteTourist(touristToRemove.getId());
 
         //then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/tourist"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/tourists"))
                 .andExpect(status().isOk());
     }
 
