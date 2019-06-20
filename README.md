@@ -5,11 +5,11 @@
 **Features:**
  - REST API: 
    - api/flights/
-            - api/flights/{id}
-            - api/tourists
-            - api/tourists/{id}
-            - api/reservation
-            - api/reservation/{id}
+   - api/flights/{id}
+   - api/tourists
+   - api/tourists/{id}
+   - api/reservation
+   - api/reservation/{id}
       
 
 
