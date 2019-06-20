@@ -2,7 +2,7 @@
 
 **Running an application requires entering database settings in "application.settings".** 
 
-**Enter 'mvn test' in terminal to runn all unit tests** 
+**Enter 'mvn test' in terminal to run all unit tests** 
 
 **Features:**
  - REST API: 
