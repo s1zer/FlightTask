@@ -4,6 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,11 +18,18 @@ public class Flight {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime arrival;
     private int seats;
-    @ManyToMany
-    @JoinColumn(name = "tourist_id")
-    private List<Tourist> tourists;
     @Column(name = "ticket_price")
     private double ticketPrice;
+    @OneToMany(mappedBy = "flight")
+    private List<Reservation> reservations = new ArrayList<>();
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 
     public Long getId() {
         return id;
@@ -53,14 +61,6 @@ public class Flight {
 
     public void setSeats(int seats) {
         this.seats = seats;
-    }
-
-    public List<Tourist> getTourists() {
-        return tourists;
-    }
-
-    public void setTourists(List<Tourist> tourists) {
-        this.tourists = tourists;
     }
 
     public double getTicketPrice() {

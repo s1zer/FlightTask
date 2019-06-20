@@ -1,10 +1,13 @@
 package com.treative.flight.service;
 
+import com.treative.flight.components.dto.FlightDto;
 import com.treative.flight.components.dto.TouristDto;
 import com.treative.flight.components.mapper.TouristMapper;
 import com.treative.flight.components.model.Tourist;
 import com.treative.flight.repository.TouristRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,4 +44,6 @@ public class TouristService {
         Optional<Tourist> touristToRemove = touristRepository.findById(id);
         touristToRemove.ifPresent(t -> touristRepository.delete(t));
     }
+
+
 }

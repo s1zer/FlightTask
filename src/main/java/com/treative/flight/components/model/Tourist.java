@@ -19,8 +19,8 @@ public class Tourist {
     private String remarks;
     @Column(name = "birth_date")
     private String birthDate;
-    @ManyToMany(mappedBy = "tourists")
-    private List<Flight> flights = new ArrayList<>();
+    @OneToMany(mappedBy = "tourist")
+    private List<Reservation> reservations = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -76,14 +76,6 @@ public class Tourist {
 
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
-    }
-
-    public List<Flight> getFlights() {
-        return flights;
-    }
-
-    public void setFlights(List<Flight> flights) {
-        this.flights = flights;
     }
 
 }

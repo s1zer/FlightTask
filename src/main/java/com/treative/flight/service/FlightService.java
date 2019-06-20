@@ -40,7 +40,7 @@ public class FlightService {
 
     public void deleteFlightById(Long id) {
         Optional<Flight> flightToRemove = flightRepository.findById(id);
-        flightToRemove.ifPresent(t -> flightRepository.delete(t));
+        flightToRemove.ifPresent(f -> flightRepository.delete(f));
     }
 
 }
