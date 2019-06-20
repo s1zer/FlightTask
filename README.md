@@ -20,7 +20,8 @@
  - REST
  - jUnit5 and Mockito
  
-  **Test coverage: **
+ **Technologies:**
+  ![Alt text](/src/main/resources/static/images/testCoverage.PNG?raw=true "TestCoverage")
   
 
 
