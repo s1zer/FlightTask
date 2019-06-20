@@ -21,7 +21,7 @@
  - jUnit5 and Mockito
  
  **Technologies:**
-  ![Alt text](/src/main/resources/static/images/testCoverage.PNG?raw=true "TestCoverage")
+  ![Alt text](/src/main/resources/static/png/testCoverage.PNG?raw=true "TestCoverage")
   
 
 
