@@ -20,19 +20,19 @@ public class ReservationRestController {
     @PostMapping("")
     public ResponseEntity<ReservationDto> saveReservation(@RequestBody ReservationDto reservationDto) {
         if (reservationDto.getId() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reservation's id must be empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ControllerConstants.ID_MUST_BE_EMPTY_MESSAGE);
         } else {
             return ResponseEntity.ok(reservationService.createReservation(reservationDto));
         }
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Long> deleteReservation(@PathVariable Long id) {
+    ResponseEntity<String> deleteReservation(@PathVariable Long id) {
         if (reservationService.findTouristById(id).isPresent()) {
             reservationService.removeTouristFormFlight(id);
-            return ResponseEntity.ok(id);
+            return new ResponseEntity<String>(ControllerConstants.SUCCESS_MESSAGE, HttpStatus.ACCEPTED);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reservation has not been found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ControllerConstants.RESERVATION_NOT_FOUND_MESSAGE);
         }
     }
 }
