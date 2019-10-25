@@ -100,7 +100,7 @@ class FlightRestControllerUnitTest {
         //when
         //then
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/flights/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isAccepted());
     }
 
     private Flight getFlight() {

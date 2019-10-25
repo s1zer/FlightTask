@@ -72,7 +72,7 @@ public class ReservationRestControllerUnitTest {
 
         //then
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/reservations/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isAccepted());
     }
 
     @Test

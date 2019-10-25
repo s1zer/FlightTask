@@ -101,7 +101,7 @@ class TouristRestControllerUnitTest {
 
         //then
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/tourists/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isAccepted());
     }
 
     private TouristDto getTouristDto() {
