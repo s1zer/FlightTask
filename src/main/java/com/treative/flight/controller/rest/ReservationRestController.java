@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/reservations")
 public class ReservationRestController {
@@ -15,6 +17,11 @@ public class ReservationRestController {
 
     public ReservationRestController(ReservationService reservationService) {
         this.reservationService = reservationService;
+    }
+
+    @GetMapping("")
+    public List<ReservationDto> getAllReservations(){
+        return reservationService.findAllReservations();
     }
 
     @PostMapping("")

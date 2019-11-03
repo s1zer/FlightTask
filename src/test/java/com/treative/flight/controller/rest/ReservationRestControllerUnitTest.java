@@ -14,14 +14,18 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ReservationRestControllerUnitTest {
@@ -36,6 +40,18 @@ public class ReservationRestControllerUnitTest {
         MockitoAnnotations.initMocks(this);
         reservationRestController = new ReservationRestController(reservationService);
         mockMvc = MockMvcBuilders.standaloneSetup(reservationRestController).build();
+    }
+
+    @Test
+    void shouldReturnAllReservations() throws Exception {
+        given(reservationService.findAllReservations()).willReturn(getReservationsDto());
+
+        reservationRestController.getAllReservations();
+
+        verify(reservationService, times(1)).findAllReservations();
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/reservations"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
@@ -108,6 +124,10 @@ public class ReservationRestControllerUnitTest {
         reservationDto.setId(1L);
 
         return reservationDto;
+    }
+
+    private List<ReservationDto> getReservationsDto(){
+        return Arrays.asList(getReservationDto());
     }
 
     private Reservation getReservation() {

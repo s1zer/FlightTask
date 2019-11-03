@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -32,6 +34,13 @@ public class ReservationService {
 
     public Optional<ReservationDto> findTouristById(Long id) {
         return reservationRepository.findById(id).map(reservationMapper::toDto);
+    }
+
+    public List<ReservationDto> findAllReservations(){
+        return reservationRepository.findAll()
+                                    .stream()
+                                    .map(reservationMapper::toDto)
+                                    .collect(Collectors.toList());
     }
 
     public ReservationDto createReservation(ReservationDto reservationDto) {
