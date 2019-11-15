@@ -1,5 +1,6 @@
 package com.treative.flight.controller.rest;
 
+import com.treative.flight.UnitTestUtil;
 import com.treative.flight.components.dto.TouristDto;
 import com.treative.flight.components.model.Gender;
 import com.treative.flight.components.model.Tourist;
@@ -44,7 +45,7 @@ class TouristRestControllerUnitTest {
     @Test
     void shouldGetAllTourists() throws Exception {
         //given
-        given(touristService.findAllTourists()).willReturn(getTouristsDto());
+        given(touristService.findAllTourists()).willReturn(UnitTestUtil.createTouristsDtoList());
 
         //when
         touristRestController.getAllTourists();
@@ -53,13 +54,13 @@ class TouristRestControllerUnitTest {
         verify(touristService, times(1)).findAllTourists();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/tourists"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
     void exceptionShouldBeThrowWhenIdNotEmpty() {
         //given
-        TouristDto touristToSave = getTouristDto();
+        TouristDto touristToSave = UnitTestUtil.createTouristDto();
 
         //when
         //then
@@ -69,7 +70,7 @@ class TouristRestControllerUnitTest {
     @Test
     void touristShouldBeSaved() throws Exception {
         //given
-        TouristDto touristToSave = getTouristDto();
+        TouristDto touristToSave = UnitTestUtil.createTouristDto();
         touristToSave.setId(null);
 
         //when
@@ -82,7 +83,7 @@ class TouristRestControllerUnitTest {
     @Test
     void touristShouldNotBeRemoved() {
         //given
-        TouristDto touristToRemove = getTouristDto();
+        TouristDto touristToRemove = UnitTestUtil.createTouristDto();
         given(touristService.findTouristById(anyLong())).willReturn(Optional.empty());
 
         //when
@@ -93,8 +94,8 @@ class TouristRestControllerUnitTest {
     @Test
     void touristShouldBeRemoved() throws Exception {
         //given
-        TouristDto touristToRemove = getTouristDto();
-        given(touristService.findTouristById(anyLong())).willReturn(Optional.of(getTouristDto()));
+        TouristDto touristToRemove = UnitTestUtil.createTouristDto();
+        given(touristService.findTouristById(anyLong())).willReturn(Optional.of(UnitTestUtil.createTouristDto()));
 
         //when
         touristRestController.deleteTourist(touristToRemove.getId());
@@ -102,36 +103,6 @@ class TouristRestControllerUnitTest {
         //then
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/tourists/1"))
                 .andExpect(status().isAccepted());
-    }
-
-    private TouristDto getTouristDto() {
-        TouristDto touristDto = new TouristDto();
-        touristDto.setId(1L);
-        touristDto.setFirstName("Joseph");
-        touristDto.setLastName("Smart");
-        touristDto.setCountry("Norway");
-        touristDto.setBirthDate("1985-04-09");
-        touristDto.setGender(Gender.MALE);
-        touristDto.setRemarks("No remarks");
-
-        return touristDto;
-    }
-
-    private Tourist getTourist() {
-        Tourist tourist = new Tourist();
-        tourist.setId(1L);
-        tourist.setFirstName("Joseph");
-        tourist.setLastName("Smart");
-        tourist.setCountry("Norway");
-        tourist.setBirthDate("1985-04-09");
-        tourist.setGender(Gender.MALE);
-        tourist.setRemarks("No remarks");
-
-        return tourist;
-    }
-
-    private List<TouristDto> getTouristsDto() {
-        return Arrays.asList(getTouristDto(), new TouristDto());
     }
 
 }

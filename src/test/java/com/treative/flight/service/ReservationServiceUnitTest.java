@@ -1,5 +1,6 @@
 package com.treative.flight.service;
 
+import com.treative.flight.UnitTestUtil;
 import com.treative.flight.components.dto.ReservationDto;
 import com.treative.flight.components.mapper.ReservationMapper;
 import com.treative.flight.components.model.Flight;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
- class ReservationServiceUnitTest {
+class ReservationServiceUnitTest {
 
     private TouristRepository touristMockRepository;
     private FlightRepository flightMockRepository;
@@ -36,14 +37,16 @@ import static org.mockito.Mockito.*;
         reservationMockRepository = mock(ReservationRepository.class);
         touristMockRepository = mock(TouristRepository.class);
         reservationService = new ReservationService(touristMockRepository,
-                flightMockRepository, reservationMockRepository, reservationMapper);
+                flightMockRepository,
+                reservationMockRepository,
+                reservationMapper);
         reservationMockService = mock(ReservationService.class);
     }
 
     @Test
     void shouldDecreaseFlightSeats() {
         //given
-        Flight flight = new Flight();
+        Flight flight = UnitTestUtil.createFlight();
         flight.setSeats(10);
 
         //when
@@ -57,7 +60,7 @@ import static org.mockito.Mockito.*;
     @Test
     void shouldIncreaseFlightSeats() {
         //given
-        Flight flight = new Flight();
+        Flight flight = UnitTestUtil.createFlight();
         flight.setSeats(10);
 
         //when
@@ -95,13 +98,13 @@ import static org.mockito.Mockito.*;
     @Test
     void shouldCreateNewReservation() {
         //given
-        Flight flight = getFlight();
+        Flight flight = UnitTestUtil.createFlight();
         Tourist tourist = new Tourist();
-        ReservationDto reservationDto = getReservationDto();
+        ReservationDto reservationDto = UnitTestUtil.createReservationDto();
 
         given(touristMockRepository.findById(anyLong())).willReturn(Optional.of(tourist));
         given(flightMockRepository.findById(anyLong())).willReturn(Optional.of(flight));
-        given(reservationMockRepository.save(any(Reservation.class))).willReturn(getReservation());
+        given(reservationMockRepository.save(any(Reservation.class))).willReturn(UnitTestUtil.createReservation());
 
         //when
         reservationService.createReservation(reservationDto);
@@ -113,13 +116,13 @@ import static org.mockito.Mockito.*;
     @Test
     void exceptionShouldBeThrownWhenFlightNotFound() {
         //given
-        Flight flight = getFlight();
+        Flight flight = UnitTestUtil.createFlight();
         Tourist tourist = new Tourist();
-        ReservationDto reservationDto = getReservationDto();
+        ReservationDto reservationDto = UnitTestUtil.createReservationDto();
 
         given(touristMockRepository.findById(anyLong())).willReturn(Optional.of(tourist));
         given(flightMockRepository.findById(anyLong())).willReturn(Optional.empty());
-        given(reservationMockRepository.save(any(Reservation.class))).willReturn(getReservation());
+        given(reservationMockRepository.save(any(Reservation.class))).willReturn(UnitTestUtil.createReservation());
 
         //when
         //then
@@ -130,13 +133,13 @@ import static org.mockito.Mockito.*;
     @Test
     void exceptionShouldBeThrownWhenTouristNotFound() {
         //given
-        Flight flight = getFlight();
+        Flight flight = UnitTestUtil.createFlight();
         Tourist tourist = new Tourist();
-        ReservationDto reservationDto = getReservationDto();
+        ReservationDto reservationDto = UnitTestUtil.createReservationDto();
 
         given(touristMockRepository.findById(anyLong())).willReturn(Optional.empty());
         given(flightMockRepository.findById(anyLong())).willReturn(Optional.of(flight));
-        given(reservationMockRepository.save(any(Reservation.class))).willReturn(getReservation());
+        given(reservationMockRepository.save(any(Reservation.class))).willReturn(UnitTestUtil.createReservation());
 
         //when
         //then
@@ -147,14 +150,14 @@ import static org.mockito.Mockito.*;
     @Test
     void exceptionShouldBeThrownWhenNotEnoughSeatsInFlight() {
         //given
-        Flight flight = getFlight();
+        Flight flight = UnitTestUtil.createFlight();
         flight.setSeats(0);
         Tourist tourist = new Tourist();
-        ReservationDto reservationDto = getReservationDto();
+        ReservationDto reservationDto = UnitTestUtil.createReservationDto();
 
         given(touristMockRepository.findById(anyLong())).willReturn(Optional.of(tourist));
         given(flightMockRepository.findById(anyLong())).willReturn(Optional.of(flight));
-        given(reservationMockRepository.save(any(Reservation.class))).willReturn(getReservation());
+        given(reservationMockRepository.save(any(Reservation.class))).willReturn(UnitTestUtil.createReservation());
 
         //when
         //then
@@ -165,7 +168,7 @@ import static org.mockito.Mockito.*;
     @Test
     void reservationShouldBeRemoved() {
         //given
-        Reservation reservation = getReservation();
+        Reservation reservation = UnitTestUtil.createReservation();
         given(reservationMockRepository.findById(anyLong())).willReturn(Optional.of(reservation));
 
         //when
@@ -178,7 +181,7 @@ import static org.mockito.Mockito.*;
     @Test
     void reservationShouldNotBeRemoved() {
         //given
-        Reservation reservation = getReservation();
+        Reservation reservation = UnitTestUtil.createReservation();
         given(reservationMockRepository.findById(anyLong())).willReturn(Optional.empty());
 
         //when
@@ -186,40 +189,6 @@ import static org.mockito.Mockito.*;
 
         //then
         verify(reservationMockRepository, times(0)).delete(any(Reservation.class));
-    }
-
-
-    private Flight getFlight() {
-        Flight flight = new Flight();
-        flight.setId(1L);
-        flight.setSeats(10);
-
-        return flight;
-    }
-
-    private Tourist getTourist() {
-        Tourist tourist = new Tourist();
-        tourist.setId(1L);
-
-        return tourist;
-    }
-
-    private ReservationDto getReservationDto() {
-        ReservationDto reservationDto = new ReservationDto();
-        reservationDto.setTouristId(getTourist().getId());
-        reservationDto.setFlightId(getFlight().getId());
-        reservationDto.setId(1L);
-
-        return reservationDto;
-    }
-
-    private Reservation getReservation() {
-        Reservation reservation = new Reservation();
-        reservation.setTourist(getTourist());
-        reservation.setFlight(getFlight());
-        reservation.setId(1L);
-
-        return reservation;
     }
 
 }

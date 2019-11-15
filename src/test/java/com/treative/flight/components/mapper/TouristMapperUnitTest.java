@@ -1,5 +1,6 @@
 package com.treative.flight.components.mapper;
 
+import com.treative.flight.UnitTestUtil;
 import com.treative.flight.components.dto.TouristDto;
 import com.treative.flight.components.model.Gender;
 import com.treative.flight.components.model.Tourist;
@@ -23,8 +24,8 @@ class TouristMapperUnitTest {
     @Test
     void shouldMapToDto() {
         //given
-        Tourist tourist = getTourist();
-        TouristDto touristDto = getTouristDto();
+        Tourist tourist = UnitTestUtil.createTourist();
+        TouristDto touristDto = UnitTestUtil.createTouristDto();
 
         //when
         TouristDto mappedTourist = touristMapper.toDto(tourist);
@@ -39,8 +40,8 @@ class TouristMapperUnitTest {
     @Test
     void shouldMapToEntity() {
         //given
-        Tourist tourist = getTourist();
-        TouristDto touristDto = getTouristDto();
+        Tourist tourist = UnitTestUtil.createTourist();
+        TouristDto touristDto = UnitTestUtil.createTouristDto();
 
         //when
         Tourist mappedTourist = touristMapper.toEntity(touristDto);
@@ -51,31 +52,4 @@ class TouristMapperUnitTest {
         assertThat(mappedTourist.getLastName(), equalTo(touristDto.getLastName()));
     }
 
-
-    private Tourist getTourist() {
-        Tourist tourist = new Tourist();
-        LocalDate birthDate = LocalDate.of(1990, 01, 01);
-        tourist.setId(1l);
-        tourist.setFirstName("Name");
-        tourist.setLastName("Surname");
-        tourist.setCountry("Poland");
-        tourist.setRemarks("No remarks");
-        tourist.setBirthDate("1990-01-01");
-        tourist.setGender(Gender.MALE);
-
-        return tourist;
-    }
-
-    private TouristDto getTouristDto() {
-        TouristDto tourist = new TouristDto();
-        tourist.setId(1l);
-        tourist.setFirstName("Name");
-        tourist.setLastName("Surname");
-        tourist.setCountry("Poland");
-        tourist.setRemarks("No remarks");
-        tourist.setBirthDate("1990-01-01");
-        tourist.setGender(Gender.MALE);
-
-        return tourist;
-    }
 }

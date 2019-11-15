@@ -1,5 +1,6 @@
 package com.treative.flight.components.mapper;
 
+import com.treative.flight.UnitTestUtil;
 import com.treative.flight.components.dto.ReservationDto;
 import com.treative.flight.components.model.Flight;
 import com.treative.flight.components.model.Reservation;
@@ -22,10 +23,7 @@ public class ReservationMapperUnitTest {
     @Test
     void shouldMapToDto() {
         //given
-        Reservation reservation = new Reservation();
-        reservation.setId(1L);
-        reservation.setFlight(new Flight());
-        reservation.setTourist(new Tourist());
+        Reservation reservation = UnitTestUtil.createReservation();
 
         //when
         ReservationDto mappedReservation = reservationMapper.toDto(reservation);

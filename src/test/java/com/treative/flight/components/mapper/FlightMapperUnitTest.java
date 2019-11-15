@@ -1,5 +1,6 @@
 package com.treative.flight.components.mapper;
 
+import com.treative.flight.UnitTestUtil;
 import com.treative.flight.components.dto.FlightDto;
 import com.treative.flight.components.model.Flight;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +24,8 @@ public class FlightMapperUnitTest {
     @Test
     void shouldMapToDto() {
         //given
-        Flight flight = getFlight();
-        FlightDto flightDto = getFlightDto();
+        Flight flight = UnitTestUtil.createFlight();
+        FlightDto flightDto = UnitTestUtil.createFlightDto();
 
         //when
         FlightDto mappedFlight = flightMapper.toDto(flight);
@@ -38,8 +39,8 @@ public class FlightMapperUnitTest {
     @Test
     void shouldMapToEntity() {
         //given
-        Flight flight = getFlight();
-        FlightDto flightDto = getFlightDto();
+        Flight flight = UnitTestUtil.createFlight();
+        FlightDto flightDto = UnitTestUtil.createFlightDto();
 
         //when
         Flight mappedFlight = flightMapper.toEntity(flightDto);
@@ -50,29 +51,4 @@ public class FlightMapperUnitTest {
         assertThat(mappedFlight.getDeparture(), equalTo(flightDto.getDeparture()));
     }
 
-    private Flight getFlight() {
-        Flight flight = new Flight();
-        LocalDateTime departure = LocalDateTime.of(2019, Month.JULY, 29, 19, 30, 40);
-        LocalDateTime arrival = LocalDateTime.of(2019, Month.JULY, 29, 21, 30, 40);
-        flight.setId(1L);
-        flight.setSeats(10);
-        flight.setTicketPrice(200);
-        flight.setDeparture(departure);
-        flight.setArrival(arrival);
-
-        return flight;
-    }
-
-    private FlightDto getFlightDto() {
-        FlightDto flight = new FlightDto();
-        LocalDateTime departure = LocalDateTime.of(2019, Month.JULY, 29, 19, 30, 40);
-        LocalDateTime arrival = LocalDateTime.of(2019, Month.JULY, 29, 21, 30, 40);
-        flight.setId(1L);
-        flight.setSeats(10);
-        flight.setTicketPrice(200);
-        flight.setDeparture(departure);
-        flight.setArrival(arrival);
-
-        return flight;
-    }
 }

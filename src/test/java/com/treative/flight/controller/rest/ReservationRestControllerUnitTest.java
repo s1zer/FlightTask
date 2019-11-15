@@ -1,5 +1,6 @@
 package com.treative.flight.controller.rest;
 
+import com.treative.flight.UnitTestUtil;
 import com.treative.flight.components.dto.ReservationDto;
 import com.treative.flight.components.model.Flight;
 import com.treative.flight.components.model.Reservation;
@@ -44,10 +45,13 @@ public class ReservationRestControllerUnitTest {
 
     @Test
     void shouldReturnAllReservations() throws Exception {
-        given(reservationService.findAllReservations()).willReturn(getReservationsDto());
+        //given
+        given(reservationService.findAllReservations()).willReturn(UnitTestUtil.createReservationsDtoList());
 
+        //when
         reservationRestController.getAllReservations();
 
+        //then
         verify(reservationService, times(1)).findAllReservations();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/reservations"))
                 .andExpect(status().isOk())
@@ -57,7 +61,7 @@ public class ReservationRestControllerUnitTest {
     @Test
     void reservationShouldBeSaved() throws Exception {
         //given
-        ReservationDto reservationToSave = getReservationDto();
+        ReservationDto reservationToSave = UnitTestUtil.createReservationDto();
         reservationToSave.setId(null);
 
         //when
@@ -70,7 +74,7 @@ public class ReservationRestControllerUnitTest {
     @Test
     void reservationShouldNotBeSaved() throws Exception {
         //given
-        ReservationDto reservationToSave = getReservationDto();
+        ReservationDto reservationToSave = UnitTestUtil.createReservationDto();
         reservationToSave.setId(1L);
 
         //when
@@ -81,7 +85,7 @@ public class ReservationRestControllerUnitTest {
     @Test
     void reservationShouldBeRemoved() throws Exception {
         //given
-        given(reservationService.findTouristById(anyLong())).willReturn(Optional.of(getReservationDto()));
+        given(reservationService.findTouristById(anyLong())).willReturn(Optional.of(UnitTestUtil.createReservationDto()));
 
         //when
         reservationRestController.deleteReservation(1L);
@@ -99,44 +103,6 @@ public class ReservationRestControllerUnitTest {
         //when
         //then
         assertThrows(ResponseStatusException.class, () -> reservationRestController.deleteReservation(anyLong()));
-    }
-
-
-    private Flight getFlight() {
-        Flight flight = new Flight();
-        flight.setId(1L);
-        flight.setSeats(10);
-
-        return flight;
-    }
-
-    private Tourist getTourist() {
-        Tourist tourist = new Tourist();
-        tourist.setId(1L);
-
-        return tourist;
-    }
-
-    private ReservationDto getReservationDto() {
-        ReservationDto reservationDto = new ReservationDto();
-        reservationDto.setTouristId(getTourist().getId());
-        reservationDto.setFlightId(getFlight().getId());
-        reservationDto.setId(1L);
-
-        return reservationDto;
-    }
-
-    private List<ReservationDto> getReservationsDto(){
-        return Arrays.asList(getReservationDto());
-    }
-
-    private Reservation getReservation() {
-        Reservation reservation = new Reservation();
-        reservation.setTourist(getTourist());
-        reservation.setFlight(getFlight());
-        reservation.setId(1L);
-
-        return reservation;
     }
 
 }

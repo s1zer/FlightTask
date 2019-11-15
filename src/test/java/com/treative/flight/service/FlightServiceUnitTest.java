@@ -1,5 +1,6 @@
 package com.treative.flight.service;
 
+import com.treative.flight.UnitTestUtil;
 import com.treative.flight.components.dto.FlightDto;
 import com.treative.flight.components.mapper.FlightMapper;
 import com.treative.flight.components.model.Flight;
@@ -33,7 +34,7 @@ public class FlightServiceUnitTest {
     @Test
     void shouldGetAllFlights() {
         //given
-        List<Flight> flights = getAllFlights();
+        List<Flight> flights = UnitTestUtil.createFlightsList();
         given(flightMockRepository.findAll()).willReturn(flights);
 
         //when
@@ -41,13 +42,13 @@ public class FlightServiceUnitTest {
 
         //then
         verify(flightMockRepository, times(1)).findAll();
-        assertThat(allFlights, hasSize(3));
+        assertThat(allFlights, hasSize(2));
     }
 
     @Test
     void shouldGetFlightById() {
         //given
-        Flight flight = getFlight();
+        Flight flight = UnitTestUtil.createFlight();
         given(flightMockRepository.findById(anyLong())).willReturn(Optional.of(flight));
 
         //when
@@ -61,8 +62,8 @@ public class FlightServiceUnitTest {
     @Test
     void shouldSaveNewFlight() {
         //given
-        FlightDto flightToSave = getFlightDto();
-        given(flightMockRepository.save(any(Flight.class))).willReturn(getFlight());
+        FlightDto flightToSave = UnitTestUtil.createFlightDto();
+        given(flightMockRepository.save(any(Flight.class))).willReturn(UnitTestUtil.createFlight());
 
         //when
         FlightDto savedFlight = flightService.saveFlight(flightToSave);
@@ -75,7 +76,7 @@ public class FlightServiceUnitTest {
     @Test
     void flightShouldBeRemoved() {
         //given
-        given(flightMockRepository.findById(anyLong())).willReturn(Optional.of(getFlight()));
+        given(flightMockRepository.findById(anyLong())).willReturn(Optional.of(UnitTestUtil.createFlight()));
 
         //when
         flightService.deleteFlightById(anyLong());
@@ -96,31 +97,5 @@ public class FlightServiceUnitTest {
         verify(flightMockRepository, times(0)).delete(any(Flight.class));
     }
 
-    private List<Flight> getAllFlights() {
-        Flight flight1 = new Flight();
-        flight1.setId(1L);
-
-        Flight flight2 = new Flight();
-        flight1.setId(2L);
-
-        Flight flight3 = new Flight();
-        flight1.setId(3L);
-
-        return Arrays.asList(flight1, flight2, flight3);
-    }
-
-    private Flight getFlight() {
-        Flight flight = new Flight();
-        flight.setId(1L);
-
-        return flight;
-    }
-
-    private FlightDto getFlightDto() {
-        FlightDto flight = new FlightDto();
-        flight.setId(1L);
-
-        return flight;
-    }
 }
 

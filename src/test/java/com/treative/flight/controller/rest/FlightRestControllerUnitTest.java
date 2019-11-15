@@ -1,5 +1,6 @@
 package com.treative.flight.controller.rest;
 
+import com.treative.flight.UnitTestUtil;
 import com.treative.flight.components.dto.FlightDto;
 import com.treative.flight.components.model.Flight;
 import com.treative.flight.service.FlightService;
@@ -44,7 +45,7 @@ class FlightRestControllerUnitTest {
     @Test
     void shouldGetAllFlights() throws Exception {
         //given
-        given(flightService.findAllFlights()).willReturn(getFlightsDto());
+        given(flightService.findAllFlights()).willReturn(UnitTestUtil.createFlightsDtoList());
 
         //when
         flightRestController.getAllFlights();
@@ -59,7 +60,7 @@ class FlightRestControllerUnitTest {
     @Test
     void exceptionShouldBeThrownWhenIdNotEmpty() {
         //given
-        FlightDto flightToSave = getFlightDto();
+        FlightDto flightToSave = UnitTestUtil.createFlightDto();
         flightToSave.setId(10L);
 
         //when
@@ -70,7 +71,7 @@ class FlightRestControllerUnitTest {
     @Test
     void flightShouldBeSaved() throws Exception {
         //given
-        FlightDto flightToSave = getFlightDto();
+        FlightDto flightToSave = UnitTestUtil.createFlightDto();
         flightToSave.setId(null);
 
         //when
@@ -83,7 +84,7 @@ class FlightRestControllerUnitTest {
     @Test
     void flightShouldNotBeRemoved() {
         //given
-        FlightDto flightToRemove = getFlightDto();
+        FlightDto flightToRemove = UnitTestUtil.createFlightDto();
         given(flightService.findFlightById(anyLong())).willReturn(Optional.empty());
 
         //when
@@ -94,8 +95,8 @@ class FlightRestControllerUnitTest {
     @Test
     void flightShouldBeRemoved() throws Exception {
         //given
-        FlightDto flightToRemove = getFlightDto();
-        given(flightService.findFlightById(anyLong())).willReturn(Optional.of(getFlightDto()));
+        FlightDto flightToRemove = UnitTestUtil.createFlightDto();
+        given(flightService.findFlightById(anyLong())).willReturn(Optional.of(UnitTestUtil.createFlightDto()));
 
         //when
         //then
@@ -103,28 +104,4 @@ class FlightRestControllerUnitTest {
                 .andExpect(status().isAccepted());
     }
 
-    private Flight getFlight() {
-        Flight flight = new Flight();
-        flight.setId(1L);
-        flight.setId(1L);
-        flight.setArrival(LocalDateTime.of(2019, 01, 01, 20, 20, 20));
-        flight.setDeparture(LocalDateTime.of(2019, 01, 01, 22, 20, 20));
-        flight.setSeats(200);
-        flight.setTicketPrice(350);
-        return flight;
-    }
-
-    private FlightDto getFlightDto() {
-        FlightDto flightDto = new FlightDto();
-        flightDto.setId(1L);
-        flightDto.setArrival(LocalDateTime.of(2019, 01, 01, 20, 20, 20));
-        flightDto.setDeparture(LocalDateTime.of(2019, 01, 01, 22, 20, 20));
-        flightDto.setSeats(200);
-        flightDto.setTicketPrice(350);
-        return flightDto;
-    }
-
-    List<FlightDto> getFlightsDto() {
-        return Arrays.asList(getFlightDto());
-    }
 }
