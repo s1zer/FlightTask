@@ -75,30 +75,6 @@ class ReservationServiceUnitTest {
     }
 
     @Test
-    void checkFreeSeatsShouldReturnFalse() {
-        //given
-        int seats = 0;
-
-        //when
-        boolean result = reservationService.checkFreeSeats(seats);
-
-        //then
-        assertFalse(result);
-    }
-
-    @Test
-    void checkFreeSeatsShouldReturnTrue() {
-        //given
-        int seats = 1;
-
-        //when
-        boolean result = reservationService.checkFreeSeats(seats);
-
-        //then
-        assertTrue(result);
-    }
-
-    @Test
     void shouldCreateNewReservation() {
         //given
         Flight flight = UnitTestUtil.createFlight();

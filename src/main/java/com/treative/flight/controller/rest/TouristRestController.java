@@ -1,5 +1,6 @@
 package com.treative.flight.controller.rest;
 
+import com.treative.flight.FlightTaskConstants;
 import com.treative.flight.components.dto.TouristDto;
 import com.treative.flight.service.TouristService;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class TouristRestController {
     @PostMapping("")
     ResponseEntity<TouristDto> saveTourist(@RequestBody TouristDto touristDto) {
         if (touristDto.getId() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ControllerConstants.ID_MUST_BE_EMPTY_MESSAGE);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, FlightTaskConstants.ID_MUST_BE_EMPTY_MESSAGE);
         } else {
             return ResponseEntity.ok(touristService.save(touristDto));
         }
@@ -37,9 +38,9 @@ public class TouristRestController {
     ResponseEntity<String> deleteTourist(@PathVariable Long id) {
         if (touristService.findTouristById(id).isPresent()) {
             touristService.deleteTouristById(id);
-            return new ResponseEntity<String>(ControllerConstants.SUCCESS_MESSAGE, HttpStatus.ACCEPTED);
+            return new ResponseEntity<String>(FlightTaskConstants.SUCCESS_MESSAGE, HttpStatus.ACCEPTED);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ControllerConstants.TOURIST_NOT_FOUND_MESSAGE);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, FlightTaskConstants.TOURIST_NOT_FOUND_MESSAGE);
         }
     }
 

@@ -5,19 +5,14 @@ import com.treative.flight.components.mapper.ReservationMapper;
 import com.treative.flight.components.model.Flight;
 import com.treative.flight.components.model.Reservation;
 import com.treative.flight.components.model.Tourist;
-import com.treative.flight.controller.rest.ControllerConstants;
+import com.treative.flight.FlightTaskConstants;
 import com.treative.flight.repository.FlightRepository;
 import com.treative.flight.repository.ReservationRepository;
 import com.treative.flight.repository.TouristRepository;
-import org.apache.coyote.Constants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.naming.ldap.Control;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,8 +26,10 @@ public class ReservationService {
     private ReservationMapper reservationMapper;
     private FlightService flightService;
 
-    public ReservationService(TouristRepository touristRepository, FlightRepository flightRepository,
-                              ReservationRepository reservationRepository, ReservationMapper reservationMapper,
+    public ReservationService(TouristRepository touristRepository,
+                              FlightRepository flightRepository,
+                              ReservationRepository reservationRepository,
+                              ReservationMapper reservationMapper,
                               FlightService flightService) {
         this.touristRepository = touristRepository;
         this.flightRepository = flightRepository;
@@ -64,9 +61,9 @@ public class ReservationService {
         if (availableFlight.isPresent()) {
             reservation.setFlight(availableFlight.get());
             reservation.setTourist(tourist.orElseThrow(() ->
-                    new ResponseStatusException(HttpStatus.BAD_REQUEST, ControllerConstants.TOURIST_NOT_FOUND_MESSAGE)));
+                    new ResponseStatusException(HttpStatus.BAD_REQUEST, FlightTaskConstants.TOURIST_NOT_FOUND_MESSAGE)));
         } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "There is no free seats in this flight");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, FlightTaskConstants.NO_FREE_SEATS);
         }
 
         decreaseFlightSeats(availableFlight.get());

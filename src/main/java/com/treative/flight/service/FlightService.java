@@ -1,5 +1,6 @@
 package com.treative.flight.service;
 
+import com.treative.flight.FlightTaskConstants;
 import com.treative.flight.components.dto.FlightDto;
 import com.treative.flight.components.mapper.FlightMapper;
 import com.treative.flight.components.model.Flight;
@@ -55,7 +56,7 @@ public class FlightService {
                 findFlight.
                         filter(f -> f.getDeparture().isAfter(currentDateTime))
                         .orElseThrow(
-                                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "This flight can no longer be booked!")));
+                                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, FlightTaskConstants.RESERVATION_TIME_HAS_EXPIRED)));
 
     }
 
