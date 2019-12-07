@@ -29,6 +29,7 @@ class ReservationServiceUnitTest {
     private ReservationMapper reservationMapper;
     private ReservationService reservationService;
     private ReservationService reservationMockService;
+    private FlightService flightMockService;
 
     @BeforeEach
     void setUp() {
@@ -36,10 +37,12 @@ class ReservationServiceUnitTest {
         flightMockRepository = mock(FlightRepository.class);
         reservationMockRepository = mock(ReservationRepository.class);
         touristMockRepository = mock(TouristRepository.class);
+        flightMockService = mock(FlightService.class);
+
         reservationService = new ReservationService(touristMockRepository,
                 flightMockRepository,
                 reservationMockRepository,
-                reservationMapper);
+                reservationMapper, flightMockService);
         reservationMockService = mock(ReservationService.class);
     }
 

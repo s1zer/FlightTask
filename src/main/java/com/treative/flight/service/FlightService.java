@@ -4,8 +4,12 @@ import com.treative.flight.components.dto.FlightDto;
 import com.treative.flight.components.mapper.FlightMapper;
 import com.treative.flight.components.model.Flight;
 import com.treative.flight.repository.FlightRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,4 +47,18 @@ public class FlightService {
         flightToRemove.ifPresent(f -> flightRepository.delete(f));
     }
 
+    public Optional<Flight> getAvailableFlight(Long flightId) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        Optional<Flight> findFlight = flightRepository.findById(flightId);
+
+        return Optional.ofNullable(
+                findFlight.
+                        filter(f -> f.getDeparture().isAfter(currentDateTime))
+                        .orElseThrow(
+                                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "This flight can no longer be booked!")));
+
+    }
+
 }
+
+

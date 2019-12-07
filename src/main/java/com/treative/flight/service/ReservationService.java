@@ -5,13 +5,19 @@ import com.treative.flight.components.mapper.ReservationMapper;
 import com.treative.flight.components.model.Flight;
 import com.treative.flight.components.model.Reservation;
 import com.treative.flight.components.model.Tourist;
+import com.treative.flight.controller.rest.ControllerConstants;
 import com.treative.flight.repository.FlightRepository;
 import com.treative.flight.repository.ReservationRepository;
 import com.treative.flight.repository.TouristRepository;
+import org.apache.coyote.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.naming.ldap.Control;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,44 +29,47 @@ public class ReservationService {
     private FlightRepository flightRepository;
     private ReservationRepository reservationRepository;
     private ReservationMapper reservationMapper;
+    private FlightService flightService;
 
     public ReservationService(TouristRepository touristRepository, FlightRepository flightRepository,
-                              ReservationRepository reservationRepository, ReservationMapper reservationMapper) {
+                              ReservationRepository reservationRepository, ReservationMapper reservationMapper,
+                              FlightService flightService) {
         this.touristRepository = touristRepository;
         this.flightRepository = flightRepository;
         this.reservationRepository = reservationRepository;
         this.reservationMapper = reservationMapper;
+        this.flightService = flightService;
     }
+
 
     public Optional<ReservationDto> findTouristById(Long id) {
         return reservationRepository.findById(id).map(reservationMapper::toDto);
     }
 
-    public List<ReservationDto> findAllReservations(){
+    public List<ReservationDto> findAllReservations() {
         return reservationRepository.findAll()
-                                    .stream()
-                                    .map(reservationMapper::toDto)
-                                    .collect(Collectors.toList());
+                .stream()
+                .map(reservationMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public ReservationDto createReservation(ReservationDto reservationDto) {
-        Optional<Flight> flight = flightRepository.findById(reservationDto.getFlightId());
+
+        Optional<Flight> availableFlight = flightService.getAvailableFlight(reservationDto.getFlightId());
         Optional<Tourist> tourist = touristRepository.findById(reservationDto.getTouristId());
         Reservation reservation = new Reservation();
 
-        if (flight.isPresent()) {
-            if (checkFreeSeats(flight.get().getSeats())) {
-                reservation.setFlight(flight.get());
-                reservation.setTourist(tourist.orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tourist has not been found")));
-            } else {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "There is no free seats in this flight");
-            }
+        availableFlight = availableFlight.filter(f -> f.getSeats() >= 1);
+
+        if (availableFlight.isPresent()) {
+            reservation.setFlight(availableFlight.get());
+            reservation.setTourist(tourist.orElseThrow(() ->
+                    new ResponseStatusException(HttpStatus.BAD_REQUEST, ControllerConstants.TOURIST_NOT_FOUND_MESSAGE)));
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Flight has not been found");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "There is no free seats in this flight");
         }
 
-        decreaseFlightSeats(flight.get());
+        decreaseFlightSeats(availableFlight.get());
         return reservationMapper.toDto(reservationRepository.save(reservation));
     }
 
@@ -70,14 +79,6 @@ public class ReservationService {
             reservationRepository.delete(reservation.get());
             Flight flight = reservation.get().getFlight();
             increaseFlightSeats(flight);
-        }
-    }
-
-    public boolean checkFreeSeats(int seats) {
-        if (seats >= 1) {
-            return true;
-        } else {
-            return false;
         }
     }
 
